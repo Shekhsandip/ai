@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google AI Assistant</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Google AI Assistant</h1>
+        <textarea id="userInput" placeholder="Ask me anything..."></textarea>
+        <button onclick="sendMessage()">Ask AI</button>
+        <div id="response"></div>
+    </div>
+
+    <script>
+        async function sendMessage() {
+            const userInput = document.getElementById("userInput").value;
+            const responseDiv = document.getElementById("response");
+
+            const response = await fetch("/ask", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ message: userInput })
+            });
+
+            const data = await response.json();
+            responseDiv.innerHTML = `<p><strong>AI:</strong> ${data.reply}</p>`;
+        }
+    </script>
+</body>
+</html>
