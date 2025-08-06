@@ -3,30 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Google AI Assistant</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <title>AI Chat</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Google AI Assistant</h1>
-        <textarea id="userInput" placeholder="Ask me anything..."></textarea>
-        <button onclick="sendMessage()">Ask AI</button>
-        <div id="response"></div>
+    <div class="chat-container">
+        <h1>AI Assistant</h1>
+        <div id="chat-box" class="chat-box"></div>
+        <input type="text" id="user-input" placeholder="Type your message..." />
+        <button onclick="sendMessage()">Send</button>
     </div>
 
     <script>
         async function sendMessage() {
-            const userInput = document.getElementById("userInput").value;
-            const responseDiv = document.getElementById("response");
+            const userInput = document.getElementById("user-input").value;
+            if (!userInput) return;
 
-            const response = await fetch("/ask", {
+            document.getElementById("chat-box").innerHTML += `<p><strong>You:</strong> ${userInput}</p>`;
+
+            const response = await fetch("/get_response", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ message: userInput })
             });
 
             const data = await response.json();
-            responseDiv.innerHTML = `<p><strong>AI:</strong> ${data.reply}</p>`;
+            document.getElementById("chat-box").innerHTML += `<p><strong>AI:</strong> ${data.reply}</p>`;
+            document.getElementById("user-input").value = "";
         }
     </script>
 </body>
